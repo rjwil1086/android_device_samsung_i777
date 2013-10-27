@@ -29,10 +29,13 @@ BOARD_HAVE_NFC := true
 
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/samsung/smdk4412
-TARGET_KERNEL_CONFIG := cyanogenmod_i777_defconfig
+TARGET_KERNEL_CONFIG := custom_i777_defconfig
 
 # assert
 TARGET_OTA_ASSERT_DEVICE := i777,SGH-I777,SGH-S959G
+
+# TWRP
+DEVICE_RESOLUTION := 480x800
 
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/i777/BoardConfigVendor.mk

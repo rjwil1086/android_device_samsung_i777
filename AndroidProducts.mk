@@ -15,4 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_i777.mk
+    $(LOCAL_DIR)/omni_i777.mk
