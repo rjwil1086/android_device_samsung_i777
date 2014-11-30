@@ -22,25 +22,23 @@
 #include <dirent.h>
 #include <sys/select.h>
 
-// #include <linux/lightsensor.h>
+#include <linux/capella_cm3602.h>
 
 #include <cutils/log.h>
 
-#include "LightSensor.h"
-
-// #define ALOG_NDEBUG 0
+#include "ProximitySensor.h"
 
 /*****************************************************************************/
 
-LightSensor::LightSensor()
-    : SensorBase(NULL, "light_sensor"),
+ProximitySensor::ProximitySensor()
+    : SensorBase(NULL, "proximity_sensor"),
       mEnabled(0),
       mInputReader(4),
       mHasPendingEvent(false)
 {
     mPendingEvent.version = sizeof(sensors_event_t);
-    mPendingEvent.sensor = ID_L;
-    mPendingEvent.type = SENSOR_TYPE_LIGHT;
+    mPendingEvent.sensor = ID_P;
+    mPendingEvent.type = SENSOR_TYPE_PROXIMITY;
     memset(mPendingEvent.data, 0, sizeof(mPendingEvent.data));
 
     if (data_fd) {
@@ -52,39 +50,23 @@ LightSensor::LightSensor()
     }
 }
 
-LightSensor::~LightSensor() {
-     if (mEnabled) {
+ProximitySensor::~ProximitySensor() {
+    if (mEnabled) {
         enable(0, 0);
     }
 }
 
-int LightSensor::setInitialState() {
+int ProximitySensor::setInitialState() {
     struct input_absinfo absinfo;
-    if (!ioctl(data_fd, EVIOCGABS(EVENT_TYPE_LIGHT), &absinfo)) {
+    if (!ioctl(data_fd, EVIOCGABS(EVENT_TYPE_PROXIMITY), &absinfo)) {
         // make sure to report an event immediately
         mHasPendingEvent = true;
-        mPendingEvent.light = absinfo.value;
+        mPendingEvent.distance = indexToValue(absinfo.value);
     }
     return 0;
 }
 
-int LightSensor::setDelay(int32_t handle, int64_t ns)
-{
-    int fd;
-    strcpy(&input_sysfs_path[input_sysfs_path_len], "poll_delay");
-    fd = open(input_sysfs_path, O_RDWR);
-    if (fd >= 0) {
-        char buf[80];
-        sprintf(buf, "%lld", ns);
-        write(fd, buf, strlen(buf)+1);
-        close(fd);
-        return 0;
-    }
-    return -1;
-}
-
-int LightSensor::enable(int32_t handle, int en)
-{
+int ProximitySensor::enable(int32_t, int en) {
     int flags = en ? 1 : 0;
     if (flags != mEnabled) {
         int fd;
@@ -92,16 +74,16 @@ int LightSensor::enable(int32_t handle, int en)
         fd = open(input_sysfs_path, O_RDWR);
         if (fd >= 0) {
             char buf[2];
-            int err;
             buf[1] = 0;
             if (flags) {
                 buf[0] = '1';
             } else {
                 buf[0] = '0';
             }
-            err = write(fd, buf, sizeof(buf));
+            write(fd, buf, sizeof(buf));
             close(fd);
             mEnabled = flags;
+            setInitialState();
             return 0;
         }
         return -1;
@@ -109,11 +91,11 @@ int LightSensor::enable(int32_t handle, int en)
     return 0;
 }
 
-bool LightSensor::hasPendingEvents() const {
+bool ProximitySensor::hasPendingEvents() const {
     return mHasPendingEvent;
 }
 
-int LightSensor::readEvents(sensors_event_t* data, int count)
+int ProximitySensor::readEvents(sensors_event_t* data, int count)
 {
     if (count < 1)
         return -EINVAL;
@@ -135,12 +117,8 @@ int LightSensor::readEvents(sensors_event_t* data, int count)
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
         if (type == EV_ABS) {
-            if (event->code == EVENT_TYPE_LIGHT) {
-                if (event->value != -1) {
-                    ALOGV("LightSensor: event (value=%d)", event->value);
-                    // FIXME: not sure why we're getting -1 sometimes
-                    mPendingEvent.light = event->value;
-                }
+            if (event->code == EVENT_TYPE_PROXIMITY) {
+                mPendingEvent.distance = indexToValue(event->value);
             }
         } else if (type == EV_SYN) {
             mPendingEvent.timestamp = timevalToNano(event->time);
@@ -150,11 +128,17 @@ int LightSensor::readEvents(sensors_event_t* data, int count)
                 numEventReceived++;
             }
         } else {
-            ALOGE("LightSensor: unknown event (type=%d, code=%d)",
+            ALOGE("ProximitySensor: unknown event (type=%d, code=%d)",
                     type, event->code);
         }
         mInputReader.next();
     }
 
     return numEventReceived;
+}
+
+float ProximitySensor::indexToValue(size_t index) const
+{
+    ALOGV("ProximitySensor: Index = %zu", index);
+    return index * PROXIMITY_THRESHOLD_CM;
 }

@@ -33,9 +33,9 @@ LOCAL_SRC_FILES := 						\
 				SensorBase.cpp			\
 				LightSensor.cpp			\
 				ProximitySensor.cpp		\
-				AkmSensor.cpp           \
-				GyroSensor.cpp          \
-                InputEventReader.cpp
+				AkmSensor.cpp                   \
+				GyroSensor.cpp                  \
+                                InputEventReader.cpp
 
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl
 LOCAL_PRELINK_MODULE := false
@@ -43,4 +43,3 @@ LOCAL_PRELINK_MODULE := false
 include $(BUILD_SHARED_LIBRARY)
 
 endif # !TARGET_SIMULATOR
-
