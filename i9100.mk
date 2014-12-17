@@ -51,3 +51,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
 $(call inherit-product-if-exists, vendor/samsung/i9100/i9100-vendor.mk)
+
+# Prebuilt Kernel
+TARGET_PREBUILT_KERNEL := device/samsung/i9100/kernel
