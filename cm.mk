@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Specify phone tech before including full_phone
+$(call inherit-product, vendor/cm/config/common.mk)
+
 # Release name
 PRODUCT_RELEASE_NAME := GT-I9100
 
