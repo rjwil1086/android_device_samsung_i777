@@ -29,6 +29,7 @@ BOARD_HAVE_NFC := true
 
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/samsung/smdk4412
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.7
 TARGET_KERNEL_CONFIG := custom_i777_defconfig
 
 # assert
@@ -36,6 +37,9 @@ TARGET_OTA_ASSERT_DEVICE := i777,SGH-I777,SGH-S959G
 
 # TWRP
 DEVICE_RESOLUTION := 480x800
+TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+TW_INCLUDE_JB_CRYPTO := false
+TW_INCLUDE_L_CRYPTO := true
 
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/i777/BoardConfigVendor.mk

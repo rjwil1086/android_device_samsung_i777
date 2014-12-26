@@ -142,4 +142,16 @@
     <!-- Minimum screen brightness allowed by the power manager. -->
     <integer name="config_screenBrightnessDim">29</integer>
 
+    <!--  Maximum number of supported users -->
+    <integer name="config_multiuserMaximumUsers">4</integer>
+
+    <!--  Whether multiuser UI should be shown -->
+    <bool name="config_enableMultiUserUI">true</bool>
+
+    <!-- Control the behavior when the user long presses the home button
+            0 - Nothing
+            1 - Recent apps view in SystemUI
+            2 - Launch assist intent
+    -->
+    <integer name="config_longPressOnHomeBehavior">1</integer>
 </resources>

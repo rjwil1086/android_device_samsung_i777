@@ -40,6 +40,6 @@ LOCAL_SRC_FILES := 						\
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl
 LOCAL_PRELINK_MODULE := false
 
-include $(BUILD_SHARED_LIBRARY)
+include $(PREBUILT_SHARED_LIBRARY)
 
 endif # !TARGET_SIMULATOR
