@@ -1,0 +1,26 @@
+[
+    {
+        "remote": "rjwil1086",
+        "repository": "android_device_samsung_galaxys2-common",
+        "target_path": "device/samsung/galaxys2-common",
+        "revision": "cm-12.0"
+    },
+    {
+        "remote": "rjwil1086",
+        "repository": "android_kernel_samsung_smdk4412",
+        "target_path": "kernel/samsung/smdk4412",
+        "revision": "android-5.0"
+    },
+    {
+        "remote": "rjwil1086",
+        "repository": "android_hardware_samsung",
+        "target_path": "hardware/samsung",
+        "revision": "android-5.0"
+    },
+    {
+        "remote": "CyanogenMod",
+        "repository": "android_packages_apps_SamsungServiceMode",
+        "target_path": "packages/apps/SamsungServiceMode",
+        "revision": "cm-12.0"
+    }
+]

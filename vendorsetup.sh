@@ -1,1 +1,1 @@
-add_lunch_combo omni_i777-userdebug
+add_lunch_combo cm_i777-userdebug
